@@ -21,17 +21,30 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/api", (req, res) => {
+    var data = new Date
+    res.json({unix: data.getTime(), utc: data.toUTCString()});
+})
 
 // your first API endpoint... 
 app.get("/api/:id", async(req, res) => {
   var { id } =  req.params
+  console.log(id)
+  if(!isNaN(id)){
+    var data = new Date(Number(id))
+    if(data === undefined || data === null || data == "Invalid Date"){
+      return res.json({ error : "Invalid Date" })
+    }
+  
+    return res.json({unix: data.getTime(), utc: data.toUTCString()});
+  }
   var data = new Date(id)
   console.log(data)
   if(data === undefined || data === null || data == "Invalid Date"){
     return res.json({ error : "Invalid Date" })
   }
 
-  res.json({unix: data.getTime(), utc: data.toUTCString()});
+  return res.json({unix: data.getTime(), utc: data.toUTCString()});
 
 });
 
